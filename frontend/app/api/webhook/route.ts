@@ -69,9 +69,9 @@ export async function POST(req: Request) {
           clerkId,
           email: email_addresses[0].email_address,
           // @ts-ignore
-          firstName: first_name,
-          lastName: last_name,
-          profileImage: image_url,
+          firstName: first_name ?? "",
+          lastName: last_name ?? "",
+          profileImage: image_url ?? "",
         },
       });
 
