@@ -1,12 +1,12 @@
-// @ts-nocheck
-
 import { PrismaClient } from "@prisma/client";
 
 declare global {
-  // eslint-disable-next-line no-unused-vars
-  let prisma: PrismaClient | undefined;
+  // Prevent multiple Prisma client instances in development
+  // eslint-disable-next-line no-unused-vars,no-var
+  var prisma: PrismaClient | undefined;
 }
 
-export const db = globalThis.prisma || new PrismaClient();
+const prisma = globalThis.prisma || new PrismaClient();
+if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma;
 
-if (process.env.NODE_ENV !== "production") globalThis.prisma = db;
+export const db = prisma;
