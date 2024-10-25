@@ -6,7 +6,7 @@ import {db} from "@/lib/prisma"; // Ensure Prisma client is imported
 import {NextResponse} from "next/server";
 
 export async function POST(req: Request) {
-  const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
+  const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET!;
 
   if (!WEBHOOK_SECRET) {
     throw new Error(
