@@ -13,10 +13,10 @@ generator client {
 model User {
   id           String   @id @default(uuid())
   email        String   @unique
-  clerkId      String   @unique // Clerk User ID for reference
-  firstName    String
-  lastName     String
-  profileImage String
+  clerkId      String   @unique
+  firstName    String? // Nullable
+  lastName     String? // Nullable
+  profileImage String? // Nullable
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
