@@ -15,7 +15,7 @@ export async function POST(request: any) {
     }
 
     // Load API key from environment variable
-    const apiKey = "AIzaSyCX3F9qzSdw5DtPXXywrbjuTs3D5Vwr2Vw";
+    const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       console.error("Google API key not found");
       return NextResponse.json({ error: "API key not found" }, { status: 500 });
