@@ -1,20 +1,14 @@
 "use client";
 
-import * as React from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
-import { Menu, Send, User } from "lucide-react";
+import { cn, formatResponse } from "@/lib/utils";
+import { Send, User } from "lucide-react";
+import { UserButton } from "@clerk/nextjs";
 
 export default function ChatPage() {
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
-  const [conversations, setConversations] = React.useState([
-    { id: 1, title: "New chat" },
-    { id: 2, title: "React component design patterns" },
-    { id: 3, title: "TypeScript best practices" },
-  ]);
-  const [currentConversation, setCurrentConversation] = React.useState(1);
   const [messages, setMessages] = React.useState([
     { id: 1, role: "assistant", content: "Hello! How can I assist you today?" },
   ]);
@@ -23,33 +17,46 @@ export default function ChatPage() {
 
   const handleSend = async () => {
     if (inputValue.trim()) {
+      console.log("Input Value:", inputValue); // Log input value before API call
+
       const newMessage = {
         id: messages.length + 1,
         role: "user",
         content: inputValue,
       };
       setMessages((prev) => [...prev, newMessage]);
-      setInputValue("");
       setIsLoading(true);
 
       try {
-        const response = await fetch("/api/chat", {
+        // Make sure to send the prompt as a JSON object
+        const response = await fetch("/api/llamaai", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: inputValue }),
+          body: JSON.stringify({ prompt: inputValue }),
         });
 
         if (!response.ok) {
           throw new Error("Error fetching response");
         }
 
-        const data = await response.json();
+        let data = await response.json();
+        data = formatResponse(data);
+        console.log({ data });
         setMessages((prev) => [
           ...prev,
-          { id: prev.length + 1, role: "assistant", content: data.message },
+          { id: prev.length + 1, role: "assistant", content: data },
         ]);
+        setInputValue("");
       } catch (error) {
         console.error("Error sending message:", error);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: prev.length + 1,
+            role: "assistant",
+            content: "Sorry, there was an error processing your request.",
+          },
+        ]);
       } finally {
         setIsLoading(false);
       }
@@ -68,17 +75,12 @@ export default function ChatPage() {
       {/* Main Content */}
       <div className="flex flex-1 flex-col">
         {/* Header */}
-        <header className="flex items-center border-b border-gray-200 bg-white p-4 md:hidden">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-          >
-            <Menu className="size-6" />
-          </Button>
-          <h1 className="ml-4 text-xl font-semibold">ChatGPT</h1>
-        </header>
-
+        <nav className="flex w-full flex-row items-end justify-evenly bg-white py-5">
+          <div className="flex items-center justify-evenly">
+            <p className="text-xl">FinIQ</p>
+            <UserButton />
+          </div>
+        </nav>
         {/* Chat Area */}
         <ScrollArea className="flex-1 p-4">
           {messages.map((message) => (
@@ -90,7 +92,7 @@ export default function ChatPage() {
               )}
             >
               {message.role === "assistant" && (
-                <div className="mr-2 flex size-8 items-center justify-center rounded-full bg-green-500 text-white">
+                <div className="mr-2 flex size-8 items-center justify-center rounded-full bg-green-500 px-2 text-white">
                   AI
                 </div>
               )}
@@ -101,9 +103,8 @@ export default function ChatPage() {
                     ? "bg-blue-500 text-white"
                     : "bg-gray-100",
                 )}
-              >
-                {message.content}
-              </div>
+                dangerouslySetInnerHTML={{ __html: message.content }} // Render HTML content
+              />
               {message.role === "user" && (
                 <div className="ml-2 flex size-8 items-center justify-center rounded-full bg-blue-500 text-white">
                   <User className="size-5" />
@@ -112,8 +113,13 @@ export default function ChatPage() {
             </div>
           ))}
           {isLoading && (
-            <div className="mx-auto mb-4 flex max-w-2xl justify-start">
-              <div className="rounded-lg bg-gray-100 p-3">Typing...</div>
+            <div className="flex">
+              <div className="mr-2 flex size-8 items-center justify-center rounded-full bg-green-500 px-2 text-white">
+                AI
+              </div>
+              <div className="mb-4 flex max-w-2xl justify-start">
+                <div className="rounded-lg bg-gray-100 p-3">Typing...</div>
+              </div>
             </div>
           )}
         </ScrollArea>
@@ -138,7 +144,7 @@ export default function ChatPage() {
             </Button>
           </div>
           <p className="mt-2 text-center text-xs text-gray-500">
-            ChatGPT can make mistakes. Consider checking important information.
+            Remember humans also make mistake and this is still a robot
           </p>
         </div>
       </div>
