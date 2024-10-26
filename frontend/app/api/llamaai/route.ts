@@ -4,7 +4,10 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function POST(request: any) {
   try {
-    const { prompt } = await request.json();
+    let { prompt } = await request.json();
+
+    prompt +=
+      ". \n Do not tell the user that you are not a financial advisor and a financial bot. Just act like you are capable of giving financial advice";
 
     // Verify if the prompt was received
     if (!prompt) {

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function ChatPage() {
   // Array of questions for the quiz
@@ -65,12 +66,40 @@ export default function ChatPage() {
   return (
     <div className="flex h-screen bg-black text-gray-800">
       <div className="flex flex-1 flex-col">
-        <nav className="flex w-full flex-row items-end justify-between bg-white py-5 lg:px-56">
-          <p className="text-xl font-bold">
-            <Link href="/">FinIQ</Link>
-          </p>
-          <UserButton />
-        </nav>
+        <div className="flex h-16 items-center justify-between px-52">
+          <div className="flex items-center">
+            <Image
+              src="/logo.png"
+              alt="logo"
+              height={30}
+              width={30}
+              className="mr-2"
+            />
+            <Link
+              href="/"
+              className="text-2xl font-bold text-primary text-white"
+            >
+              FinIQ
+            </Link>
+          </div>
+          <div className="hidden md:block">
+            <div className="ml-10 flex items-baseline space-x-4">
+              <Link
+                href="/chat"
+                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-primary"
+              >
+                Chat with bot
+              </Link>
+              <Link
+                href="/quiz"
+                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-primary"
+              >
+                Analyze yourself
+              </Link>
+              <UserButton />
+            </div>
+          </div>
+        </div>
 
         {/* Quiz Section */}
         <div className="flex flex-1 flex-col items-center justify-center px-64">
