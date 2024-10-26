@@ -119,10 +119,7 @@ export default function ChatPage() {
               width={30}
               className="mr-2"
             />
-            <Link
-              href="/"
-              className="text-2xl font-bold text-primary text-white"
-            >
+            <Link href="/" className="text-2xl font-bold text-white">
               FinIQ
             </Link>
           </div>

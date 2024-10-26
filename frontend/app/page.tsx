@@ -48,7 +48,7 @@ export default function LandingPage() {
           <p className="mx-auto mb-8 max-w-2xl text-xl text-muted-foreground">
             One stop platform for all your financial needs.
             <br />
-            The only financial plan you'll ever need.
+            The only financial plan you&apos;ll ever need.
           </p>
           <div className="space-x-4">
             <Button asChild size="lg">
