@@ -19,5 +19,6 @@ export function formatResponse(responseText: string): string {
     .replace(
       "I can give you the current conditions",
       "<strong>I can give you the current conditions</strong>",
-    );
+    )
+    .replace(/\*\*/g, "");
 }
